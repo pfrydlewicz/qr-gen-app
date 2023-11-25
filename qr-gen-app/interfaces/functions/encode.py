@@ -1,10 +1,8 @@
 import io
 import qrcode
 
-from pydantic import AnyHttpUrl
 
-
-def create_qr_from_url(text: str) -> bytes:
+def create_qr(text: str) -> bytes:
     """"""
     qr = qrcode.QRCode(
         version=1,
@@ -12,7 +10,7 @@ def create_qr_from_url(text: str) -> bytes:
         box_size=10,
         border=4,
     )
-    qr.add_data(url)
+    qr.add_data(text)
     qr.make(fit=True)
 
     img = qr.make_image(fill_color="black", back_color="white")
