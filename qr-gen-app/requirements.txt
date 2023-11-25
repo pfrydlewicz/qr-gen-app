@@ -1,1 +1,5 @@
-fastapi
+black
+fastapi==0.104.*
+pydantic==2.5.*
+qrcode[pil]==7.4.*
+uvicorn[standard]==0.24.*
