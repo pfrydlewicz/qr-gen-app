@@ -10,13 +10,14 @@ from interfaces.enums import file_formats
 def create_qr(
     text: str,
     file_format: file_formats.FileFormatEnums,
+    box_width: int,
     border_width: int = 4,
 ) -> bytes:
     """"""
     qr = QRCode(
         version=1,
         error_correction=constants.ERROR_CORRECT_L,
-        box_size=10,
+        box_size=box_width,
         border=border_width,
     )
     qr.add_data(text)
@@ -29,7 +30,9 @@ def create_qr(
         save_kwargs = {"format": file_format.value}
 
     img = qr.make_image(
-        fill_color="black", back_color="white", image_factory=image_factory
+        fill_color="black",
+        back_color="white",
+        image_factory=image_factory,
     )
 
     if isinstance(img, SvgImage):

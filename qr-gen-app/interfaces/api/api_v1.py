@@ -25,11 +25,48 @@ router = APIRouter()
 async def encode_url(
     url: Annotated[AnyHttpUrl, Query(max_length=1024)],
     border_width: Annotated[int, Query(ge=0, le=20)] = 2,
+    box_width: Annotated[int, Query(ge=1, le=20)] = 5,
     file_format: file_formats.FileFormatEnums = file_formats.FileFormatEnums.PNG,
 ):
     """"""
     result_bytes, exported_format = create_qr(
-        text=str(url), border_width=border_width, file_format=file_format
+        text=str(url),
+        box_width=box_width,
+        border_width=border_width,
+        file_format=file_format,
+    )
+    return Response(
+        content=result_bytes,
+        media_type=file_formats.get_content_type(exported_format),
+        headers={"Content-Type": file_formats.get_content_type(exported_format)},
+    )
+
+
+@router.get(
+    "/v1/encode_string",
+    responses={
+        200: {
+            "content": {
+                file_formats.get_content_type(fmt): {}
+                for fmt in file_formats.FileFormatEnums
+            }
+        }
+    },
+    response_class=Response,
+    tags=["Encoding"],
+)
+async def encode_url(
+    string: Annotated[str, Query(max_length=2000)],
+    border_width: Annotated[int, Query(ge=0, le=20)] = 2,
+    box_width: Annotated[int, Query(ge=1, le=20)] = 5,
+    file_format: file_formats.FileFormatEnums = file_formats.FileFormatEnums.PNG,
+):
+    """"""
+    result_bytes, exported_format = create_qr(
+        text=string,
+        box_width=box_width,
+        border_width=border_width,
+        file_format=file_format,
     )
     return Response(
         content=result_bytes,
